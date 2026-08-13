@@ -1,0 +1,4 @@
+interface:
+  display_name: "Progressive TODO Tree"
+  short_description: "用第一性原理、预算压缩和路线复审维护最小、可接管的 TODO 树"
+  default_prompt: "使用 $progressive-todo-tree，从第一性原理识别核心结果，压缩预算并维护一棵最小、可接管、可复审的 TODO 树。"
