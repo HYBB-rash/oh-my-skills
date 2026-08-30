@@ -1,8 +1,14 @@
-# 需求定义
+# Oh My Skills
 
 简体中文 | [English](README.md)
 
-这是一个面向 Codex 的 Skill，用来把不确定的讨论收敛为必须满足、不可再删除的需求核心。
+这是一个个人 Codex Skill 集合。每个 Skill 都作为 `skills/` 下的同级目录加入。
+
+## 已收录技能
+
+### 需求定义
+
+把不确定的讨论收敛为必须满足、不可再删除的需求核心。
 
 它用需求树表达问题，区分候选方案与真正需求，并且每轮只问一个问题：其答案仍可能改变根目标、价值排序、不可接受结果或边界的那一题。
 
@@ -16,7 +22,7 @@
 - **证据边界：** 可查事实由 Agent 核验；价值和边界由用户决定。
 - **明确收敛：** 前沿清空后，输出根目标、不可再删除的需求核心、已确认边界和会影响判断的未定假设。
 
-## 安装
+## 安装 `requirement-definition`
 
 克隆仓库：
 
@@ -38,7 +44,7 @@ mkdir -p "$HOME/.agents/skills"
 cp -R progressive-todo-tree/skills/requirement-definition "$HOME/.agents/skills/"
 ```
 
-## 使用
+## 使用 `requirement-definition`
 
 可以直接点名：
 

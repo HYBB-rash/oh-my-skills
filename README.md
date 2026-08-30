@@ -1,8 +1,14 @@
-# Requirement Definition
+# Oh My Skills
 
 [简体中文](README.zh-CN.md) | English
 
-A Codex skill for turning an uncertain discussion into the smallest confirmed requirement that must be satisfied.
+A personal collection of Codex Skills. Add each Skill as a sibling directory under `skills/`.
+
+## Included skills
+
+### Requirement Definition
+
+Turn an uncertain discussion into the smallest confirmed requirement that must be satisfied.
 
 It models the need as a requirement tree, separates candidate solutions from the irreducible core, and asks only one question at a time—the one whose answer can still change the goal, priority, unacceptable outcome, or boundary.
 
@@ -16,7 +22,7 @@ It models the need as a requirement tree, separates candidate solutions from the
 - **Evidence boundary:** verify checkable facts; leave values and boundaries to the user.
 - **Explicit convergence:** when the frontier is empty, return the root goal, irreducible core, confirmed boundaries, and material unresolved assumptions.
 
-## Install
+## Install `requirement-definition`
 
 Clone the repository:
 
@@ -38,7 +44,7 @@ mkdir -p "$HOME/.agents/skills"
 cp -R progressive-todo-tree/skills/requirement-definition "$HOME/.agents/skills/"
 ```
 
-## Use
+## Use `requirement-definition`
 
 Invoke it explicitly:
 
