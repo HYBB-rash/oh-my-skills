@@ -23,5 +23,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Per-branch archival for closed top-level branches.
 - English and Simplified Chinese project documentation.
 
-[0.1.0]: https://github.com/HYBB-rash/progressive-todo-tree/releases/tag/v0.1.0
-[0.2.0]: https://github.com/HYBB-rash/progressive-todo-tree/releases/tag/v0.2.0
+[0.1.0]: https://github.com/HYBB-rash/oh-my-skills/releases/tag/v0.1.0
+[0.2.0]: https://github.com/HYBB-rash/oh-my-skills/releases/tag/v0.2.0

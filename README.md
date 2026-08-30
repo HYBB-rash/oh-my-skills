@@ -21,7 +21,7 @@ It models the need as a requirement tree, separates candidate solutions from the
 Clone the repository:
 
 ```bash
-git clone https://github.com/HYBB-rash/progressive-todo-tree.git
+git clone https://github.com/HYBB-rash/oh-my-skills.git
 ```
 
 Copy the skill into the default Codex skills directory:
