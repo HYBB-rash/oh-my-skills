@@ -58,6 +58,20 @@ Or describe the need naturally, for example:
 We have several proposed solutions and conflicting priorities. Help us define what must actually change before we design the system.
 ```
 
+### First-Principles Gate
+
+Create one logical stage gate for a complex task: a fresh blind audit freezes the observable pass conditions, then the same auditor closes only the conditions reopened by decisive evidence.
+
+This Skill is invoked explicitly as `$first-principles-gate`; it does not activate implicitly.
+
+```bash
+cp -R progressive-todo-tree/skills/first-principles-gate "${CODEX_HOME:-$HOME/.codex}/skills/"
+```
+
+```text
+Use $first-principles-gate to establish a stage gate for this complex task.
+```
+
 ## Repository layout
 
 ```text
@@ -68,6 +82,9 @@ We have several proposed solutions and conflicting priorities. Help us define wh
 ├── LICENSE
 ├── VERSION
 └── skills/
+    ├── first-principles-gate/
+    │   ├── SKILL.md
+    │   └── agents/openai.yaml
     └── requirement-definition/
         ├── SKILL.md
         └── agents/openai.yaml
