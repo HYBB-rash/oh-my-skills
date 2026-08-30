@@ -1,0 +1,4 @@
+interface:
+  display_name: "需求定义"
+  short_description: "用需求树逐轮关闭关键分支并收敛不可再删除的需求核心"
+  default_prompt: "使用 $requirement-definition 通过需求树每轮只问一个关键问题，收敛不可再删除的需求核心。"
