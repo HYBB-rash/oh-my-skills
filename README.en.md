@@ -20,31 +20,31 @@ They can be used in sequence: use `requirement-definition` to confirm the irredu
 
 ### `requirement-definition`: establish what must actually change
 
-**Core problem.** A discussion often mixes pains, candidate solutions, preferences, constraints, and guesses. Teams can mistake the first proposed solution for the requirement and move directly into design or planning.
+**Core problem.** Once a requirement is mostly stated, clarification can still keep inventing edge cases or reopen answered branches in different words. “Keep clarifying” becomes an imagination contest with no convergent end.
 
-This Skill models the need as a tree rooted in “who needs to change → current state → required result.” It applies a deletion test: if removing something leaves the root problem unchanged, it is a solution; if the need changes, it is irreducible core. Each round asks only the question that can still change the root goal, value order, unacceptable outcome, or boundary; it converges only when that frontier is empty.
+This Skill models the need as a tree rooted in “who needs to change → current state → required result.” It applies a deletion test: if removing something leaves the root problem unchanged, it is a solution; if the need changes, it is irreducible core. Questions may come only from conflicts and gaps already present in the material. Each round asks one question that can still change the judgment; answered branches stay closed, and it converges as soon as the frontier is empty.
 
 **How it differs from common requirement, PRD, or backlog Skills.**
 
 - They often organize the user's first framing; this Skill tests whether that framing confuses a solution, cause, or value judgment with a requirement.
 - They often produce a proposal, priorities, task list, or specification; this Skill stops at the root goal, irreducible core, confirmed boundaries, and material unresolved assumptions.
-- They may aim to ask every useful question; this Skill keeps one currently decisive question and leaves answered branches closed.
+- They may aim to ask every useful question and keep adding imagined edge cases; this Skill does not invent branches outside the material, keeps one currently decisive question, and leaves answered branches closed.
 
-Use it when the need is ambiguous, solutions compete, goals conflict, or the work needs a reason to exist before design begins. Do not use it for a small reversible change whose goal and boundary are already clear.
+Use it when real conflicts or gaps can still change the outcome, but discussion has begun to repeat or expand, or the work needs a reason to exist before design begins. Do not use it for a small reversible change whose goal and boundary are already clear.
 
 ### `first-principles-gate`: close a complex stage within its evidence boundary
 
-**Core problem.** Even with a plan, complex work can expand during execution, cycle through new auditors, treat “more rigor” as a reason for endless rework, or cross an external-action boundary without a confirmed condition.
+**Core problem.** A complex task can keep going because it was planned, partly completed, or once approved—not because the next work can still be derived from the original requirement and current facts. Sunk cost, inertia, and self-justification can replace a present justification for continuing.
 
-This Skill creates one logical stage gate. A fresh independent auditor first blind-reviews the original requirements and current facts, then freezes observable pass conditions. Only decisive new evidence reopens the smallest relevant condition. At the next decision boundary, the same auditor performs bounded closure and returns `PASS`, `REVISE`, or `STOP`. It is explicit-only: invoke `$first-principles-gate`; it does not activate by itself.
+This Skill creates one logical stage gate. The executor first shows why the current plan, stage, and artifacts still follow from the original requirement and current facts. Before seeing the execution result, a fresh independent auditor blind-reviews the evidence and actively looks for a supported counterexample, then freezes observable pass conditions. Only decisive new evidence reopens the smallest relevant condition. At the next decision boundary, the same auditor performs bounded closure and returns `PASS`, `REVISE`, or `STOP`. A historical `PASS` is not a permanent credential. It is explicit-only: invoke `$first-principles-gate`; it does not activate by itself.
 
 **How it differs from common code reviews, quality gates, and checklists.**
 
-- They usually test fixed engineering criteria; this Skill first tests whether the stage is necessary and whether it crosses its agreed authority, formal-object, or external-action boundary.
-- They can re-review the whole task each round; this Skill freezes scope and revisits only conditions genuinely reopened by new evidence.
-- They can let an abstract wish for rigor block progress; this Skill permits `REVISE` only for evidenced necessity conflicts, decisive missing facts, or serious hard-to-recover risks. Other concerns remain non-blocking notes.
+- They usually test fixed engineering criteria; this Skill first attacks whether the stage still has a right to exist, rather than endorsing an established plan's quality.
+- They can inspect an execution result and then supply reasons for it; this Skill requires an independent auditor to form a counterfactual baseline from the original requirement and current facts first. A different executor solution can still pass if it is equally justified.
+- They can re-review the whole task each round; this Skill freezes scope and revisits only conditions genuinely reopened by new evidence, preventing “more rigor” from becoming a reason for endless rework.
 
-Use it for complex staged work with formal objects or consequential external actions that needs independent counterargument and a clear conclusion. Do not use it for simple reversible work, and do not treat it as an automated lock that decides for the executor.
+Use it for complex staged work whose next investment needs to be shown still worthwhile; formal objects or consequential external actions make the gate especially useful. Do not use it for simple reversible work, and do not treat it as an automated lock that decides for the executor.
 
 ## Install
 
