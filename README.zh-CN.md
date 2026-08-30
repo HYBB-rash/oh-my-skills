@@ -21,7 +21,7 @@
 克隆仓库：
 
 ```bash
-git clone https://github.com/HYBB-rash/progressive-todo-tree.git
+git clone https://github.com/HYBB-rash/oh-my-skills.git
 ```
 
 复制到 Codex 默认 Skill 目录：
