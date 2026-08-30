@@ -58,6 +58,20 @@ cp -R progressive-todo-tree/skills/requirement-definition "$HOME/.agents/skills/
 我们有几个候选方案和互相冲突的优先级。请先定义真正需要改变什么，再进入系统设计。
 ```
 
+### 第一性原理阶段门禁
+
+为复杂任务建立一个逻辑阶段门禁：新鲜盲审先冻结可观察的通过条件，之后由同一审计者只复核被决定性证据重新打开的条件。
+
+这个 Skill 只能通过 `$first-principles-gate` 显式调用，不会自动触发。
+
+```bash
+cp -R progressive-todo-tree/skills/first-principles-gate "${CODEX_HOME:-$HOME/.codex}/skills/"
+```
+
+```text
+使用 $first-principles-gate，为这个复杂任务建立阶段门禁。
+```
+
 ## 仓库结构
 
 ```text
@@ -68,6 +82,9 @@ cp -R progressive-todo-tree/skills/requirement-definition "$HOME/.agents/skills/
 ├── LICENSE
 ├── VERSION
 └── skills/
+    ├── first-principles-gate/
+    │   ├── SKILL.md
+    │   └── agents/openai.yaml
     └── requirement-definition/
         ├── SKILL.md
         └── agents/openai.yaml

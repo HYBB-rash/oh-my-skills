@@ -1,0 +1,7 @@
+interface:
+  display_name: "第一性原理阶段门禁"
+  short_description: "冻结阶段终点，在决策边界由同一审计者局部复核并收口"
+  default_prompt: "Use $first-principles-gate to freeze this stage’s evidence-based pass conditions and let the same auditor close the checkpoint at the next decision boundary."
+
+policy:
+  allow_implicit_invocation: false
