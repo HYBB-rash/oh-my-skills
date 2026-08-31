@@ -2,7 +2,7 @@
 
 中文 | [English](README.en.md)
 
-这是一个个人 Codex Skill 集合。每个 Skill 都是 `skills/` 下独立的同级目录；当前收录两个用于把复杂工作“想清楚、卡住边界”的 Skill。
+这是一个个人 Codex Skill 集合。每个 Skill 都是 `skills/` 下独立的同级目录；当前收录三个用于把复杂工作想清楚、卡住边界、讲明白的 Skill。
 
 ## 先选哪一个
 
@@ -12,6 +12,9 @@
 
 已经决定要做什么，但需要防止阶段越界、返工或无限审计
   → first-principles-gate
+
+已经有结论或材料，但需要让读者立刻听懂、分清已知和未知
+  → plain-chinese
 ```
 
 两者可以连续使用：先用 `requirement-definition` 确认需求核心，再用 `first-principles-gate` 为后续复杂阶段冻结通过条件。它们不替代设计、拆任务、实现或发布。
@@ -50,6 +53,22 @@
 
 不适用：简单、可逆、无需独立审计的小任务；也不能把它当成替执行者作决定的自动化锁。
 
+### `plain-chinese`：把结论讲清楚，不把未知讲成确定
+
+它解决的核心问题是：解释、汇报或方案即使事实正确，也可能被术语、背景和罗列淹没；读者不知道结论是什么，也分不清已经确认的事实、合理推测和仍未确定的地方。
+
+它先用一句话给出核心意思，只保留支撑这一点的因果，删除不影响判断或下一步行动的内容；必要术语马上换成普通话，并明确标出“已经确认”“目前推测”与“还不能确定”。
+
+它和普通摘要、翻译或文案润色工具的不同是：
+
+- 普通摘要主要压缩内容；它先保证第一句话给出结论，并保留解释结论所需的因果。
+- 普通润色可能把话写得更顺，却掩盖证据强度；它把事实、推测和未知明确分开。
+- 普通“通俗化”可能丢掉行动所需的信息；它只删掉不影响当前判断或下一步的话。
+
+适用：用户要求说人话、简单讲、结论先行、不要术语，或需要明确标出推测与不确定性。
+
+不适用：需要保留逐字法律、技术或历史原文的场合。
+
 ## 安装
 
 克隆仓库：
@@ -64,6 +83,7 @@ git clone https://github.com/HYBB-rash/oh-my-skills.git
 mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
 cp -R oh-my-skills/skills/requirement-definition "${CODEX_HOME:-$HOME/.codex}/skills/"
 cp -R oh-my-skills/skills/first-principles-gate "${CODEX_HOME:-$HOME/.codex}/skills/"
+cp -R oh-my-skills/skills/plain-chinese "${CODEX_HOME:-$HOME/.codex}/skills/"
 ```
 
 若使用其他 Skill 根目录，只需把相应的 `skills/<skill-name>` 目录复制过去。
@@ -74,6 +94,8 @@ cp -R oh-my-skills/skills/first-principles-gate "${CODEX_HOME:-$HOME/.codex}/ski
 使用 $requirement-definition，找出这个方案背后不可再删除的需求核心。
 
 使用 $first-principles-gate，为这个复杂任务建立阶段门禁。
+
+使用 $plain-chinese，把这段汇报说人话，并标出还不能确定的地方。
 ```
 
 ## 仓库结构
@@ -87,6 +109,9 @@ cp -R oh-my-skills/skills/first-principles-gate "${CODEX_HOME:-$HOME/.codex}/ski
 ├── VERSION
 └── skills/
     ├── first-principles-gate/
+    │   ├── SKILL.md
+    │   └── agents/openai.yaml
+    ├── plain-chinese/
     │   ├── SKILL.md
     │   └── agents/openai.yaml
     └── requirement-definition/

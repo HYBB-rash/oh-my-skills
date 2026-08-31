@@ -2,7 +2,7 @@
 
 [中文](README.md) | English
 
-A personal collection of Codex Skills. Each Skill is an independent sibling directory under `skills/`. The two current Skills help make complex work clear before implementation and keep consequential stages within their agreed boundary.
+A personal collection of Codex Skills. Each Skill is an independent sibling directory under `skills/`. The three current Skills help make complex work clear before implementation, keep consequential stages within their agreed boundary, and explain conclusions plainly.
 
 ## Which Skill to use first
 
@@ -12,6 +12,9 @@ The required change is still unclear
 
 The work is defined but a complex stage needs a bounded, independent checkpoint
   → first-principles-gate
+
+The conclusion is known but must be stated plainly with evidence and uncertainty visible
+  → plain-chinese
 ```
 
 They can be used in sequence: use `requirement-definition` to confirm the irreducible need, then use `first-principles-gate` to freeze pass conditions for a consequential later stage. Neither replaces design, task decomposition, implementation, or release.
@@ -46,6 +49,20 @@ This Skill creates one logical stage gate. The executor first shows why the curr
 
 Use it for complex staged work whose next investment needs to be shown still worthwhile; formal objects or consequential external actions make the gate especially useful. Do not use it for simple reversible work, and do not treat it as an automated lock that decides for the executor.
 
+### `plain-chinese`: explain the conclusion plainly without pretending uncertainty is settled
+
+**Core problem.** An explanation, report, or proposal can be factually correct yet bury its conclusion in jargon, background, and lists. Readers then cannot tell what matters, what is confirmed, what is inferred, and what remains unknown.
+
+This Skill states the core conclusion first, retains only the causal explanation that supports it, removes detail that does not change the judgment or next action, translates necessary jargon immediately, and labels confirmed facts, inferences, and uncertainty explicitly.
+
+**How it differs from common summarization, translation, or copyediting tools.**
+
+- They mainly compress content; this Skill makes the first sentence answer the reader's central question and keeps the causal chain needed to support it.
+- They can make prose smoother while obscuring evidence strength; this Skill separates facts, inference, and unknowns.
+- They can simplify by dropping action-relevant detail; this Skill removes only what does not affect the current judgment or next step.
+
+Use it when the user asks for plain language, a simple explanation, conclusion first, less jargon, or explicit uncertainty. Do not use it where an exact legal, technical, or historical quotation must be preserved verbatim.
+
 ## Install
 
 Clone the repository:
@@ -60,6 +77,7 @@ Copy the needed Skills into the default Codex skills directory:
 mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
 cp -R oh-my-skills/skills/requirement-definition "${CODEX_HOME:-$HOME/.codex}/skills/"
 cp -R oh-my-skills/skills/first-principles-gate "${CODEX_HOME:-$HOME/.codex}/skills/"
+cp -R oh-my-skills/skills/plain-chinese "${CODEX_HOME:-$HOME/.codex}/skills/"
 ```
 
 For a different Skill root, copy the corresponding `skills/<skill-name>` directory there.
@@ -70,6 +88,8 @@ For a different Skill root, copy the corresponding `skills/<skill-name>` directo
 Use $requirement-definition to identify the irreducible requirement behind this proposal.
 
 Use $first-principles-gate to establish a stage gate for this complex task.
+
+Use $plain-chinese to explain this report plainly and state what remains uncertain.
 ```
 
 ## Repository layout
@@ -83,6 +103,9 @@ Use $first-principles-gate to establish a stage gate for this complex task.
 ├── VERSION
 └── skills/
     ├── first-principles-gate/
+    │   ├── SKILL.md
+    │   └── agents/openai.yaml
+    ├── plain-chinese/
     │   ├── SKILL.md
     │   └── agents/openai.yaml
     └── requirement-definition/
