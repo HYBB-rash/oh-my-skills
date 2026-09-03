@@ -10,14 +10,14 @@ A personal collection of Codex Skills. Each Skill is an independent sibling dire
 The required change is still unclear
   → requirement-definition
 
-The work is defined but a complex stage needs a bounded, independent checkpoint
+The work is defined but each new concept must prove it is indispensable
   → first-principles-gate
 
 The conclusion is known but must be stated plainly with evidence and uncertainty visible
   → plain-chinese
 ```
 
-They can be used in sequence: use `requirement-definition` to confirm the irreducible need, then use `first-principles-gate` to freeze pass conditions for a consequential later stage. Neither replaces design, task decomposition, implementation, or release.
+They can be used in sequence: use `requirement-definition` to confirm the irreducible need, then use `first-principles-gate` to derive the smallest concept budget from the user outcome and freeze pass conditions. Neither replaces design, task decomposition, implementation, or release.
 
 ## Included Skills
 
@@ -35,17 +35,18 @@ This Skill models the need as a tree rooted in “who needs to change → curren
 
 Use it when real conflicts or gaps can still change the outcome, but discussion has begun to repeat or expand, or the work needs a reason to exist before design begins. Do not use it for a small reversible change whose goal and boundary are already clear.
 
-### `first-principles-gate`: close a complex stage within its evidence boundary
+### `first-principles-gate`: make complex designs prove every added concept
 
 **Core problem.** A complex task can keep going because it was planned, partly completed, or once approved—not because the next work can still be derived from the original requirement and current facts. Sunk cost, inertia, and self-justification can replace a present justification for continuing.
 
-This Skill creates one logical stage gate. The executor first shows why the current plan, stage, and artifacts still follow from the original requirement and current facts. Before seeing the execution result, a fresh independent auditor blind-reviews the evidence and actively looks for a supported counterexample, then freezes observable pass conditions. Only decisive new evidence reopens the smallest relevant condition. At the next decision boundary, the same auditor performs bounded closure and returns `PASS`, `REVISE`, or `STOP`. A historical `PASS` is not a permanent credential. It is explicit-only: invoke `$first-principles-gate`; it does not activate by itself.
+This Skill separates user outcomes, hard constraints, current facts, and candidate mechanisms; freezes the audit object and the pre-feature baseline; and counts concepts by the independent distinctions a future maintainer must remember. A design claiming `N` concepts must build a one-concept-at-a-time proof from zero and then remove each concept from the complete design. A deterministic validator checks count conservation, ladder shape, requirement coverage, evidence references, and baseline provenance. A lower-cost Luna or Terra challenger may independently propose a smaller budget, but there is no vote: the more complex design must answer with a current, cited failure. Historical `PASS`, committed code, and passing tests cannot launder feature-created complexity into a zero-cost baseline. The Skill remains explicit-only through `$first-principles-gate`.
 
 **How it differs from common code reviews, quality gates, and checklists.**
 
-- They usually test fixed engineering criteria; this Skill first attacks whether the stage still has a right to exist, rather than endorsing an established plan's quality.
-- They can inspect an execution result and then supply reasons for it; this Skill requires an independent auditor to form a counterfactual baseline from the original requirement and current facts first. A different executor solution can still pass if it is equally justified.
-- They can re-review the whole task each round; this Skill freezes scope and revisits only conditions genuinely reopened by new evidence, preventing “more rigor” from becoming a reason for endless rework.
+- They usually test fixed engineering criteria; this Skill first asks whether every added long-lived concept has a right to exist.
+- They can use “more rigorous” as sufficient justification; this Skill makes the more complex design prove why a smaller one fails.
+- They often measure code or terminology; this Skill measures independent maintenance distinctions and tests them with a `0→N` ladder, delete-one proofs, and a lower-budget challenger.
+- They can re-review the whole task each round; this Skill keeps one logical gate and performs bounded closure against a frozen first-round list.
 
 Use it for complex staged work whose next investment needs to be shown still worthwhile; formal objects or consequential external actions make the gate especially useful. Do not use it for simple reversible work, and do not treat it as an automated lock that decides for the executor.
 
@@ -87,7 +88,7 @@ For a different Skill root, copy the corresponding `skills/<skill-name>` directo
 ```text
 Use $requirement-definition to identify the irreducible requirement behind this proposal.
 
-Use $first-principles-gate to establish a stage gate for this complex task.
+Use $first-principles-gate to derive the smallest concept budget from the user outcome and block unsupported persistent complexity.
 
 Use $plain-chinese to explain this report plainly and state what remains uncertain.
 ```
@@ -104,7 +105,10 @@ Use $plain-chinese to explain this report plainly and state what remains uncerta
 └── skills/
     ├── first-principles-gate/
     │   ├── SKILL.md
-    │   └── agents/openai.yaml
+    │   ├── agents/openai.yaml
+    │   ├── scripts/validate_complexity_budget.py
+    │   ├── tests/
+    │   └── skill-contract.json
     ├── plain-chinese/
     │   ├── SKILL.md
     │   └── agents/openai.yaml

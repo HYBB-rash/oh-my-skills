@@ -1,0 +1,500 @@
+{
+  "schema_version": 1,
+  "skill": {
+    "name": "first-principles-gate"
+  },
+  "user_decisions": [
+    {
+      "id": "UD-COMPLEXITY-BURDEN",
+      "text": "谁想增加长期复杂度，谁负责证明非加不可；Gate 应从原始需求推导全局最小设计，并卡住主进程提出的无依据复杂设计。",
+      "node_ids": [
+        "normalize-evidence",
+        "derive-global-minimum",
+        "audit-complexity"
+      ]
+    },
+    {
+      "id": "UD-SEMANTIC-FAILURE",
+      "text": "信息不足时不得用新增持久机制填补未知；优先更小、可恢复的当前用法方案，有界问题继续或进入非阻塞 To Do。",
+      "node_ids": [
+        "normalize-evidence",
+        "derive-global-minimum",
+        "audit-complexity"
+      ]
+    },
+    {
+      "id": "UD-SEMANTIC-QUALITY",
+      "text": "以 Personal Feed V2 的历史为反例改进：不能把一个用户结果的内部切面、Group、schema、测试、超时和局部修复反复升级为新鲜门禁，也不能用更多 owner、子进程、状态机和审计角色自动关闭普通可恢复问题。",
+      "node_ids": [
+        "normalize-evidence",
+        "derive-global-minimum",
+        "audit-complexity"
+      ]
+    },
+    {
+      "id": "UD-CONCEPT-BUDGET",
+      "text": "以一个新功能引入的独立新概念和新定义衡量复杂度；主张需要 N 个概念时，必须证明零个、一个直到 N-1 个为何做不成，并证明完整方案中每个概念都不可删除；功能自己已经实现或提交的概念不能洗成预算基线。",
+      "node_ids": [
+        "derive-global-minimum",
+        "audit-complexity",
+        "validate-budget"
+      ]
+    },
+    {
+      "id": "UD-LOW-BUDGET-CHALLENGER",
+      "text": "让 Luna 或 Terra 等能力和成本较低的模型独立提出低复杂度预算，与主方案互相反证；低预算不是投票结果，复杂方案必须用当前需求和事实证明额外概念非加不可。",
+      "node_ids": [
+        "derive-global-minimum",
+        "audit-complexity"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "normalize-evidence",
+      "title": "Separate user outcomes from candidate mechanisms",
+      "state": "semantic",
+      "summary": "Classify the supplied material into user-observable results, confirmed hard constraints, current facts, and candidate designs or process choices.",
+      "inputs": {
+        "type": "object",
+        "required": ["materials"],
+        "properties": {
+          "materials": {"type": "array"}
+        },
+        "additionalProperties": false
+      },
+      "outputs": {
+        "type": "object",
+        "required": ["action", "parameters"],
+        "properties": {
+          "action": {"enum": ["classified", "unsupported"]},
+          "parameters": {"type": "object"}
+        },
+        "additionalProperties": false
+      },
+      "semantic": {
+        "depends_on": [
+          "Whether a statement describes the user's observable result or merely one proposed implementation, architecture, plan, workflow, test, or audit mechanism."
+        ],
+        "why_model_needed": "The distinction depends on meaning and provenance in the user's current materials; fixed keywords would misclassify domain requirements and implementation choices.",
+        "deterministic_suboperations_remaining": [],
+        "insufficient_information_policy": {
+          "user_decision_id": "UD-SEMANTIC-FAILURE",
+          "action": "continue",
+          "no_response": "Treat the disputed mechanism as a candidate, not a hard constraint, and keep the smaller reversible path."
+        },
+        "output_contract": {
+          "type": "object",
+          "required": ["action", "parameters"],
+          "properties": {
+            "action": {"enum": ["classified", "unsupported"]},
+            "parameters": {"type": "object"}
+          },
+          "additionalProperties": false
+        },
+        "allowed_actions": [
+          {
+            "name": "classified",
+            "effect": "none",
+            "parameter_contract": {
+              "type": "object",
+              "required": ["user_results", "hard_constraints", "facts", "candidate_mechanisms"],
+              "properties": {
+                "user_results": {"type": "array"},
+                "hard_constraints": {"type": "array"},
+                "facts": {"type": "array"},
+                "candidate_mechanisms": {"type": "array"}
+              },
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "unsupported",
+            "effect": "none",
+            "parameter_contract": {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": false
+            }
+          }
+        ],
+        "runtime_code_generation": false,
+        "runtime_control_flow_generation": false,
+        "risk_policy": {
+          "can_trigger_high_risk_side_effect": false
+        },
+        "evaluation": {
+        "cases": [
+          {
+            "id": "E-NORMALIZE-DESIGN-DOC",
+            "input": "A user asks for one Personal Feed result; an architecture document and Goal prompt prescribe five slices, fresh gates per stage, and fixed agent roles.",
+            "acceptable": "Keep the observable Personal Feed result and confirmed release boundaries; classify the five slices, repeated gates, and fixed agent topology as candidate mechanisms that must be re-derived.",
+            "unacceptable": "Treat every item in the architecture and Goal prompt as an immutable original requirement."
+          }
+        ],
+        "automatic_test_ids": ["T-GATE-RULES"],
+        "pass_condition": "The Skill explicitly separates user outcomes and hard constraints from architecture, plan, workflow, test, and audit mechanisms.",
+        "user_review": {
+          "status": "approved",
+          "decision_id": "UD-SEMANTIC-QUALITY"
+          }
+        }
+      },
+      "adaptive_reads": []
+    },
+    {
+      "id": "derive-global-minimum",
+      "title": "Derive the globally smallest current-use design",
+      "state": "semantic",
+      "summary": "Compare the smallest end-to-end candidate with doing nothing, a direct reversible experiment, and the supplied candidate before opening local repair work.",
+      "inputs": {
+        "type": "object",
+        "required": ["user_results", "hard_constraints", "facts", "candidate_mechanisms"],
+        "properties": {
+          "user_results": {"type": "array"},
+          "hard_constraints": {"type": "array"},
+          "facts": {"type": "array"},
+          "candidate_mechanisms": {"type": "array"}
+        },
+        "additionalProperties": false
+      },
+      "outputs": {
+        "type": "object",
+        "required": ["action", "parameters"],
+        "properties": {
+          "action": {"enum": ["candidate", "unsupported"]},
+          "parameters": {"type": "object"}
+        },
+        "additionalProperties": false
+      },
+      "semantic": {
+        "depends_on": [
+          "Which combination of responsibilities and mechanisms is the smallest complete design for the user's present result and environment."
+        ],
+        "why_model_needed": "Competing designs can be semantically equivalent while differing in responsibility, maintenance cost, and fit to the user's current use; this cannot be selected by a fixed mechanical rule.",
+        "deterministic_suboperations_remaining": [],
+        "insufficient_information_policy": {
+          "user_decision_id": "UD-SEMANTIC-FAILURE",
+          "action": "continue",
+          "no_response": "Choose only a smaller reversible experiment or keep the uncertainty non-blocking."
+        },
+        "output_contract": {
+          "type": "object",
+          "required": ["action", "parameters"],
+          "properties": {
+            "action": {"enum": ["candidate", "unsupported"]},
+            "parameters": {"type": "object"}
+          },
+          "additionalProperties": false
+        },
+        "allowed_actions": [
+          {
+            "name": "candidate",
+            "effect": "none",
+            "parameter_contract": {
+              "type": "object",
+              "required": ["minimum_design", "smaller_counterfactual", "removed_mechanisms"],
+              "properties": {
+                "minimum_design": {"type": "array"},
+                "smaller_counterfactual": {"type": "array"},
+                "removed_mechanisms": {"type": "array"}
+              },
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "unsupported",
+            "effect": "none",
+            "parameter_contract": {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": false
+            }
+          }
+        ],
+        "runtime_code_generation": false,
+        "runtime_control_flow_generation": false,
+        "risk_policy": {
+          "can_trigger_high_risk_side_effect": false
+        },
+        "evaluation": {
+        "cases": [
+          {
+            "id": "E-GLOBAL-NOT-LOCAL",
+            "input": "A recoverable child-process timeout can be handled by one bounded failure, but a local repair proposes an owner, hard budget, KILL matrix, reaper, poison state, and late-close protocol.",
+            "acceptable": "Recompute the whole path, keep the bounded recoverable failure unless direct evidence proves it cannot satisfy the user result, and reject the cumulative mechanisms.",
+            "unacceptable": "Call every added layer a locally minimal repair and accept their cumulative complexity."
+          },
+          {
+            "id": "E-FROZEN-BUDGET-BASELINE",
+            "input": "A feature introduced a subprocess owner and recovery protocol, committed them, and then starts its complexity audit from the current commit.",
+            "acceptable": "Freeze the whole feature as the audit object and count the feature-introduced concepts even though they are already committed and tested.",
+            "unacceptable": "Treat the feature's own committed mechanisms as a zero-cost baseline and count only the next edit."
+          }
+        ],
+        "automatic_test_ids": ["T-GATE-RULES"],
+        "pass_condition": "The Skill requires a global end-to-end comparison and treats cumulative local repairs as a reason to recompute the design.",
+        "user_review": {
+          "status": "approved",
+          "decision_id": "UD-SEMANTIC-QUALITY"
+          }
+        }
+      },
+      "adaptive_reads": []
+    },
+    {
+      "id": "audit-complexity",
+      "title": "Put the burden of proof on persistent complexity",
+      "state": "semantic",
+      "summary": "Block any proposed persistent mechanism that lacks a direct requirement, a reachable user-result failure without it, and evidence that a smaller reversible alternative is insufficient.",
+      "inputs": {
+        "type": "object",
+        "required": ["minimum_design", "proposed_mechanisms"],
+        "properties": {
+          "minimum_design": {"type": "array"},
+          "proposed_mechanisms": {"type": "array"}
+        },
+        "additionalProperties": false
+      },
+      "outputs": {
+        "type": "object",
+        "required": ["action", "parameters"],
+        "properties": {
+          "action": {"enum": ["pass", "revise", "stop", "unsupported"]},
+          "parameters": {"type": "object"}
+        },
+        "additionalProperties": false
+      },
+      "semantic": {
+        "depends_on": [
+          "Whether the evidence proves each proposed persistent mechanism is indispensable to the current user result rather than merely more complete, rigorous, or defensive."
+        ],
+        "why_model_needed": "Necessity and proportionality depend on the current user's result, environment, recoverability, and reachable failure paths; a fixed list cannot decide them.",
+        "deterministic_suboperations_remaining": [],
+        "insufficient_information_policy": {
+          "user_decision_id": "UD-SEMANTIC-FAILURE",
+          "action": "continue",
+          "no_response": "Remove, downgrade, or defer the unproven mechanism; do not block in the direction of more complexity."
+        },
+        "output_contract": {
+          "type": "object",
+          "required": ["action", "parameters"],
+          "properties": {
+            "action": {"enum": ["pass", "revise", "stop", "unsupported"]},
+            "parameters": {"type": "object"}
+          },
+          "additionalProperties": false
+        },
+        "allowed_actions": [
+          {
+            "name": "pass",
+            "effect": "none",
+            "parameter_contract": {
+              "type": "object",
+              "required": ["necessity_proofs", "complexity_delta", "budget_path"],
+              "properties": {
+                "necessity_proofs": {"type": "array"},
+                "complexity_delta": {"type": "object"},
+                "budget_path": {"type": "string"}
+              },
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "revise",
+            "effect": "none",
+            "parameter_contract": {
+              "type": "object",
+              "required": ["remove_or_downgrade", "closure_conditions"],
+              "properties": {
+                "remove_or_downgrade": {"type": "array"},
+                "closure_conditions": {"type": "array"}
+              },
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "stop",
+            "effect": "none",
+            "parameter_contract": {
+              "type": "object",
+              "required": ["lost_necessity"],
+              "properties": {
+                "lost_necessity": {"type": "array"}
+              },
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "unsupported",
+            "effect": "none",
+            "parameter_contract": {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": false
+            }
+          }
+        ],
+        "runtime_code_generation": false,
+        "runtime_control_flow_generation": false,
+        "risk_policy": {
+          "can_trigger_high_risk_side_effect": false
+        },
+        "evaluation": {
+        "cases": [
+          {
+            "id": "E-SAME-RESULT-NO-NEW-GATE",
+            "input": "The user result, authorization, formal object, external action, and real-world boundary are unchanged; an internal slice is renamed Group C1b after a schema or timeout failure.",
+            "acceptable": "Keep one logical gate and route the bounded implementation issue to TDD, review, or To Do; do not start a fresh blind audit.",
+            "unacceptable": "Treat the new Group name as a new stage and open another fresh gate."
+          },
+          {
+            "id": "E-UNPROVEN-PERSISTENT-MECHANISM",
+            "input": "An auditor proposes a new owner, subprocess, state machine, recovery protocol, or mandatory agent stage without direct evidence that its absence makes the current user result fail irrecoverably.",
+            "acceptable": "Return REVISE in the direction of removal, downgrade, or a smaller reversible experiment.",
+            "unacceptable": "Make the new mechanism a closure condition merely because it eliminates a theoretical counterexample."
+          },
+          {
+            "id": "E-ATOMIC-CONCEPTS",
+            "input": "One proposal counts exposure, clicks, assistant inference, and one-off likes as four concepts even though they are all examples rejected by one authorized-evidence admission rule; another proposal calls independently changeable deduplication and ordering one concept.",
+            "acceptable": "Count the shared examples as one rule, split independently changeable deduplication and ordering, and state the observable maintenance distinction behind every concept.",
+            "unacceptable": "Count nouns and examples mechanically, or hide separable behavior behind one broad label."
+          },
+          {
+            "id": "E-LOW-BUDGET-CHALLENGER",
+            "input": "A lower-cost independent model produces a smaller structurally valid budget that covers every hard requirement; the main auditor prefers a larger design because it feels more rigorous.",
+            "acceptable": "Require the larger design to cite a concrete requirement failure caused by the smaller budget; adopt the smaller budget if no such counterexample exists.",
+            "unacceptable": "Let model seniority, rigor language, or majority vote decide."
+          }
+        ],
+        "automatic_test_ids": ["T-GATE-RULES"],
+        "pass_condition": "The Skill makes persistent-complexity proponents prove necessity, forbids internal renaming from opening a new gate, and separates ordinary correctness work from the necessity gate.",
+        "user_review": {
+          "status": "approved",
+          "decision_id": "UD-SEMANTIC-QUALITY"
+          }
+        }
+      },
+      "adaptive_reads": []
+    },
+    {
+      "id": "validate-budget",
+      "title": "Validate concept-budget structure and evidence references",
+      "state": "deterministic",
+      "summary": "Check baseline provenance plus the claimed count, numbered concepts, one-at-a-time ladder, delete-one proofs, requirement coverage, and allowed evidence references.",
+      "inputs": {
+        "type": "object",
+        "required": ["budget_path"],
+        "properties": {
+          "budget_path": {"type": "string"}
+        },
+        "additionalProperties": false
+      },
+      "outputs": {
+        "type": "object",
+        "required": ["status", "concept_count", "errors"],
+        "properties": {
+          "status": {"enum": ["PASS", "REVISE"]},
+          "concept_count": {"type": "integer"},
+          "errors": {"type": "array"}
+        },
+        "additionalProperties": false
+      },
+      "deterministic": {
+        "mechanism": {
+          "kind": "existing_script",
+          "reference": "scripts/validate_complexity_budget.py"
+        },
+        "parameter_rules": [
+          "Pass exactly one local JSON budget path selected for the current audit."
+        ],
+        "steps": [
+          {"id": "load", "operation": "Load the selected JSON budget."},
+          {"id": "validate", "operation": "Validate audit mode, baseline-fact provenance, count conservation, ladder shape, delete-one coverage, requirement coverage, and evidence references."},
+          {"id": "report", "operation": "Return PASS with the concept count or REVISE with stable error codes."}
+        ],
+        "branches": [
+          {"condition": "The budget is valid.", "outcome": "success"},
+          {"condition": "The budget is missing, malformed, inconsistent, uncovered, launders current facts into the baseline, or cites unsupported evidence.", "outcome": "failure"}
+        ],
+        "state_transitions": [
+          {"from": "pending", "event": "success", "to": "validated"},
+          {"from": "pending", "event": "failure", "to": "revise"}
+        ],
+        "retry_policy": {"mode": "none", "failure_state": "revise"},
+        "failure_states": [
+          {"code": "invalid_budget", "terminal": true}
+        ],
+        "termination_conditions": [
+          "Stop after emitting one PASS or REVISE JSON result."
+        ],
+        "preconditions": [
+          "The selected path is a readable local JSON file for the current audit."
+        ],
+        "side_effects": []
+      },
+      "test_plan": {
+        "coverage": {
+          "input": {"test_ids": ["T-COMPLEXITY-BUDGET"]},
+          "output": {"test_ids": ["T-COMPLEXITY-BUDGET"]},
+          "branch": {"test_ids": ["T-COMPLEXITY-BUDGET"]},
+          "failure": {"test_ids": ["T-COMPLEXITY-BUDGET"]},
+          "side_effect": {"not_applicable": "The validator only reads one local JSON file and writes its result to stdout."},
+          "precondition": {"test_ids": ["T-COMPLEXITY-BUDGET"]},
+          "data_contract": {"test_ids": ["T-COMPLEXITY-BUDGET"]}
+        }
+      }
+    }
+  ],
+  "workflow": {
+    "entry_node_ids": ["normalize-evidence"],
+    "transitions": [
+      {"from": "normalize-evidence", "outcome": "action:classified", "to": "derive-global-minimum"},
+      {"from": "normalize-evidence", "outcome": "action:unsupported", "to": "unsupported"},
+      {"from": "derive-global-minimum", "outcome": "action:candidate", "to": "audit-complexity"},
+      {"from": "derive-global-minimum", "outcome": "action:unsupported", "to": "unsupported"},
+      {"from": "audit-complexity", "outcome": "action:pass", "to": "validate-budget"},
+      {"from": "audit-complexity", "outcome": "action:revise", "to": "revise"},
+      {"from": "audit-complexity", "outcome": "action:stop", "to": "stop"},
+      {"from": "audit-complexity", "outcome": "action:unsupported", "to": "unsupported"},
+      {"from": "validate-budget", "outcome": "success", "to": "pass"},
+      {"from": "validate-budget", "outcome": "failure", "to": "revise"}
+    ],
+    "terminal_ids": ["pass", "revise", "stop", "unsupported"]
+  },
+  "boundary_review": {
+    "deterministic_work_left_to_model": [],
+    "model_nodes_without_semantic_need": [],
+    "rule_gaps_disguised_as_uncertainty": [],
+    "reviewed_node_ids": [
+      "normalize-evidence",
+      "derive-global-minimum",
+      "audit-complexity",
+      "validate-budget"
+    ]
+  },
+  "tests": [
+    {
+      "id": "T-GATE-RULES",
+      "kind": "semantic_automatic",
+      "node_ids": [
+        "normalize-evidence",
+        "derive-global-minimum",
+        "audit-complexity"
+      ],
+      "argv": ["python3", "tests/test_gate_rules.py"],
+      "expected_exit_code": 0,
+      "timeout_seconds": 30
+    },
+    {
+      "id": "T-COMPLEXITY-BUDGET",
+      "kind": "deterministic",
+      "node_ids": [
+        "validate-budget"
+      ],
+      "argv": ["python3", "tests/test_complexity_budget.py"],
+      "expected_exit_code": 0,
+      "timeout_seconds": 30
+    }
+  ]
+}

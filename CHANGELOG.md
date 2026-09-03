@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project follows [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- Reworked `first-principles-gate` around a frozen pre-feature baseline, atomic concept budgets, `0→N` necessity ladders, delete-one proofs, and independent lower-budget challengers.
+
+### Added
+
+- Added deterministic validation for concept-count conservation, requirement coverage, evidence references, and baseline provenance, with rule-derived regression tests.
+
 ## [0.4.0] - 2026-08-31
 
 ### Added
