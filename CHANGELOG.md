@@ -8,11 +8,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Synced the 2026-09-07 `first-principles-gate`: concise default conclusions, single-body proof reuse, full-design delete-one checks, and follow-up updates limited to changed premises or responsibilities.
+- Compare challengers by actual behavior and maintenance responsibilities before concept counts.
+
 - Reworked `first-principles-gate` around a frozen pre-feature baseline, atomic concept budgets, `0→N` necessity ladders, delete-one proofs, and independent lower-budget challengers.
 
 ### Added
 
 - Added deterministic validation for concept-count conservation, requirement coverage, evidence references, and baseline provenance, with rule-derived regression tests.
+
+### Fixed
+
+- Require an explicit baseline; reject coverage that relies on an empty baseline.
+- Require failure-proof text or valid local proof references; reject missing bodies, broken targets, metadata-only targets, and reference cycles. Older ID-only budgets must be repaired. Structural validation still does not judge semantic validity.
+- Limit `STOP` to the object shown unnecessary, and pause only audit-dependent steps when the auditor is unavailable without inventing a new verdict.
+
+### Removed
+
+- Removed the unused `skill-contract.json` and text-rule test; retained and expanded the budget validator's regression suite to 31 tests.
 
 ## [0.4.0] - 2026-08-31
 

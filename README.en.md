@@ -41,6 +41,10 @@ Use it when real conflicts or gaps can still change the outcome, but discussion 
 
 This Skill separates user outcomes, hard constraints, current facts, and candidate mechanisms; freezes the audit object and the pre-feature baseline; and counts concepts by the independent distinctions a future maintainer must remember. A design claiming `N` concepts must build a one-concept-at-a-time proof from zero and then remove each concept from the complete design. A deterministic validator checks count conservation, ladder shape, requirement coverage, evidence references, and baseline provenance. A lower-cost Luna or Terra challenger may independently propose a smaller budget, but there is no vote: the more complex design must answer with a current, cited failure. Historical `PASS`, committed code, and passing tests cannot launder feature-created complexity into a zero-cost baseline. The Skill remains explicit-only through `$first-principles-gate`.
 
+User-facing output is concise by default; full evidence stays in working materials. Before-addition and full-design deletion conditions are checked separately. Each proof has one body, and follow-up reviews update only entries affected by changed premises or responsibilities. Lower-budget proposals are compared by actual behavior and maintenance duties before counts, so renaming or merging descriptions does not count as simplification.
+
+The validator now requires an explicit baseline and checks failure-proof bodies or resolvable references within the budget. An empty baseline cannot support baseline coverage; empty bodies, broken references, and reference cycles are rejected. Older budgets containing only IDs or invalid references need repair. Structural `PASS` does not establish a sound argument. `STOP` applies only to the current object proven unnecessary; an unavailable auditor pauses dependent steps without issuing a new verdict. The budget validator has 31 regression tests; these checks do not establish overall efficiency gains.
+
 **How it differs from common code reviews, quality gates, and checklists.**
 
 - They usually test fixed engineering criteria; this Skill first asks whether every added long-lived concept has a right to exist.
@@ -107,8 +111,7 @@ Use $plain-chinese to explain this report plainly and state what remains uncerta
     │   ├── SKILL.md
     │   ├── agents/openai.yaml
     │   ├── scripts/validate_complexity_budget.py
-    │   ├── tests/
-    │   └── skill-contract.json
+    │   └── tests/test_complexity_budget.py
     ├── plain-chinese/
     │   ├── SKILL.md
     │   └── agents/openai.yaml

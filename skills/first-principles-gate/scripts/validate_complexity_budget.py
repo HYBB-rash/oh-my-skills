@@ -12,6 +12,15 @@ ALLOWED_EVIDENCE_KINDS = {
     "verified_failure",
 }
 
+# Existing budget spellings, not a general document or evidence resolver.
+FAILURE_BODY_FIELDS = {"proof", "explanation", "reasoning", "argument", "path", "text"}
+PROOF_BODY_FIELDS = FAILURE_BODY_FIELDS | {
+    "before", "delete_from_full", "failure_before_add", "failure_after_delete",
+    "reachable_failure", "reachable_failure_without", "failure_path",
+}
+PROOF_REFERENCE_FIELDS = ("proof_ref", "proof_reference")
+PROOF_ROOT_FIELDS = {"necessity", "necessity_proof"}
+
 
 def non_empty_string(value: object) -> bool:
     return isinstance(value, str) and bool(value.strip())
@@ -21,12 +30,107 @@ def duplicate_ids(values: list[str]) -> bool:
     return len(values) != len(set(values))
 
 
+def is_reference_only(value: str, reference_ids: set[str]) -> bool:
+    value = value.strip(" \t\r\n`'\"()[]{}.,;:!?<>，。、；：！？（）【】")
+    parts = value.split(".")
+    reference_root = (
+        parts[0] in reference_ids
+        or parts[0] == "concepts"
+        or (parts[0][:1] in {"R", "E", "C", "N"} and parts[0][1:].isdecimal())
+    )
+    if len(parts) > 1 and reference_root and all(part.isidentifier() for part in parts):
+        return True  # A bare dot path belongs in proof_ref, not a body field.
+    words = "".join(char if char.isalnum() or char == "_" else " " for char in value).split()
+    return all(
+        word in reference_ids
+        or word.isdecimal()
+        or (word[0] in "RECN" and word[1:].isdecimal())
+        for word in words
+    )
+
+
+def has_proof_text(value: object, reference_ids: set[str]) -> bool:
+    """Reject empty text and a few citation-only forms, not unsound arguments."""
+    if not non_empty_string(value):
+        return False
+    value = value.strip()
+    if is_reference_only(value, reference_ids):
+        return False
+    # This finite shell check does not parse references embedded in prose.
+    for prefix in ("见", "参考", "引用", "see ", "refer to "):
+        if value.casefold().startswith(prefix) and is_reference_only(value[len(prefix):], reference_ids):
+            return False
+    return True
+
+
+def has_proof_content(
+    value: object,
+    path: str,
+    concepts_by_id: dict[str, dict],
+    reference_ids: set[str],
+    errors: list[dict[str, str]],
+    active_refs: tuple[str, ...] = (),
+    body_fields: set[str] = PROOF_BODY_FIELDS,
+) -> bool:
+    """Resolve only [concepts.]Ci.(necessity|necessity_proof)[.dict_key...].
+
+    String targets must be a proof root or a known body field. Object targets
+    need a known body field or an explicit proof_ref chain; IDs and metadata do
+    not count. All explicit references are checked, even alongside valid prose.
+    Missing/out-of-scope paths, empty targets and cycles fail. No file/network
+    access or interpretation of natural-language references occurs here.
+    """
+    if isinstance(value, str):
+        return has_proof_text(value, reference_ids)
+    if not isinstance(value, dict):
+        return False
+    found = any(has_proof_text(value.get(field), reference_ids) for field in body_fields)
+    for field in PROOF_REFERENCE_FIELDS:
+        if field not in value:
+            continue
+        ref = value[field]
+        ref_path = f"{path}.{field}"
+        parts = ref.strip().removeprefix("concepts.").split(".") if non_empty_string(ref) else []
+        if (
+            len(parts) < 2
+            or parts[0] not in concepts_by_id
+            or parts[1] not in PROOF_ROOT_FIELDS
+            or not all(part.isidentifier() for part in parts)
+        ):
+            errors.append({"code": "E_PROOF_REFERENCE", "path": ref_path})
+            continue
+        canonical_ref = ".".join(parts)
+        if canonical_ref in active_refs:
+            errors.append({"code": "E_PROOF_REFERENCE_CYCLE", "path": ref_path})
+            continue
+        target: object = concepts_by_id[parts[0]]
+        for part in parts[1:]:
+            if not isinstance(target, dict) or part not in target:
+                errors.append({"code": "E_PROOF_REFERENCE", "path": ref_path})
+                break
+            target = target[part]
+        else:
+            if isinstance(target, str) and parts[-1] not in PROOF_BODY_FIELDS | PROOF_ROOT_FIELDS:
+                errors.append({"code": "E_PROOF_REFERENCE", "path": ref_path})
+                continue
+            prior_errors = len(errors)
+            resolved = has_proof_content(
+                target, canonical_ref, concepts_by_id, reference_ids, errors,
+                active_refs + (canonical_ref,),
+            )
+            if not resolved and len(errors) == prior_errors:
+                errors.append({"code": "E_PROOF_REFERENCE_TARGET", "path": ref_path})
+            found = found or resolved
+    return found
+
+
 def validate_failure(
     failure: object,
     path: str,
     requirement_ids: set[str],
     evidence_ids: set[str],
     errors: list[dict[str, str]],
+    concepts_by_id: dict[str, dict],
 ) -> None:
     if not isinstance(failure, dict):
         errors.append({"code": "E_FAILURE_PROOF", "path": path})
@@ -42,6 +146,13 @@ def validate_failure(
     elif any(item not in evidence_ids for item in cited):
         errors.append({"code": "E_EVIDENCE_REFERENCE", "path": f"{path}.evidence_ids"})
 
+    prior_errors = len(errors)
+    if not has_proof_content(
+        failure, path, concepts_by_id, requirement_ids | evidence_ids | set(concepts_by_id),
+        errors, body_fields=FAILURE_BODY_FIELDS,
+    ) and len(errors) == prior_errors:
+        errors.append({"code": "E_FAILURE_PROOF", "path": path})
+
 
 def validate_budget(data: object) -> list[dict[str, str]]:
     errors: list[dict[str, str]] = []
@@ -49,7 +160,7 @@ def validate_budget(data: object) -> list[dict[str, str]]:
         return [{"code": "E_BUDGET_ROOT", "path": "$"}]
 
     scope = data.get("audit_scope")
-    baseline = scope.get("baseline", []) if isinstance(scope, dict) else []
+    baseline = scope.get("baseline") if isinstance(scope, dict) else None
     if (
         not isinstance(scope, dict)
         or not non_empty_string(scope.get("object"))
@@ -119,6 +230,10 @@ def validate_budget(data: object) -> list[dict[str, str]]:
     if len(concept_ids) != len(concepts) or concept_ids != expected_concept_ids:
         errors.append({"code": "E_CONCEPT_IDS", "path": "concepts"})
     concept_id_set = set(concept_ids)
+    concepts_by_id = {
+        item["id"]: item for item in concepts
+        if isinstance(item, dict) and non_empty_string(item.get("id")) and item["id"] in concept_id_set
+    }
 
     claimed_count = data.get("claimed_count")
     if isinstance(claimed_count, bool) or not isinstance(claimed_count, int) or claimed_count != len(concepts):
@@ -142,6 +257,7 @@ def validate_budget(data: object) -> list[dict[str, str]]:
             not isinstance(satisfied_by, list)
             or not satisfied_by
             or any(value != "baseline" and value not in concept_id_set for value in satisfied_by)
+            or ("baseline" in satisfied_by and not baseline)
         ):
             errors.append({"code": "E_REQUIREMENT_COVERAGE", "path": f"coverage[{index}].satisfied_by"})
     if set(covered_requirements) != requirement_id_set or duplicate_ids(covered_requirements):
@@ -168,6 +284,7 @@ def validate_budget(data: object) -> list[dict[str, str]]:
                 requirement_id_set,
                 evidence_id_set,
                 errors,
+                concepts_by_id,
             )
 
     delete_one = data.get("delete_one")
@@ -185,6 +302,7 @@ def validate_budget(data: object) -> list[dict[str, str]]:
             requirement_id_set,
             evidence_id_set,
             errors,
+            concepts_by_id,
         )
 
     return errors
