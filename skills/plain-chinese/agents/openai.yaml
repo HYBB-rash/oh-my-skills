@@ -1,4 +1,0 @@
-interface:
-  display_name: "说人话"
-  short_description: "把复杂解释改成短、清楚、标明未知和推测的日常中文表达"
-  default_prompt: "用 $plain-chinese 把这段话说人话。"

@@ -1,0 +1,3 @@
+interface:
+  display_name: "可读报告"
+  short_description: "把已有报告重组为更容易理解结论的阅读版，按需加入有用的图解与交互"

@@ -1,0 +1,18 @@
+{
+  "version": "readable-report-review-v1",
+  "scope": "本 Skill 的固定阅读版布局；只审查当前输入，不追加外部事实核验。",
+  "machine_timeout_ms": 25000,
+  "step_timeout_ms": 4000,
+  "automatic_retries": 0,
+  "semantic_checks": {
+    "fidelity": "结论、数字和条件忠于底稿；建议、排查顺序和示意没有被写成已证实的因果或效果。",
+    "coverage": "重要判断和限制有解释或明确入口；没有因压缩而改变取舍和适用条件。",
+    "explanation": "读者能理解主要问题、理由和适用条件；有内容支撑的完整解释，不只是换标题。仅在原文支持时提供比较、示意或判断方法。"
+  },
+  "visual_checks": {
+    "desktop": "查看 desktop.png：第一解释节的文字、层次与控件没有明显裁切、重叠或阅读障碍；存在比较时检查双栏。",
+    "mobile": "查看 mobile.png：第一解释节在 390px 下可读，没有明显裁切和重叠；存在比较时检查堆叠。"
+  },
+  "verdict_policy": "同一生产者只做一次内容和图片审读。逐项记录 passed/failed/incomplete；每项内容判断给出底稿原句、成品字段原句和理由。没看图片写 incomplete。脚本只验证证据位置和完整性，不替模型作语义判断。失败提交保留；引用或表结构错误只改审读表后重交，不重写原稿。实质改稿必须新建工作目录。",
+  "outcome_policy": "缺项或工具失败记 incomplete；实际不符合标准记 failed；全部通过仅代表本清单范围内通过，不代表事实已核验、整页视觉已审完或用户已接受。"
+}

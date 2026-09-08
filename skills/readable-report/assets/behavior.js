@@ -1,0 +1,6 @@
+'use strict';
+const cases=[...document.querySelectorAll('.case')],picks=[...document.querySelectorAll('[data-pick]')];
+function show(id){cases.forEach(c=>c.hidden=Boolean(id)&&c.id!==id);picks.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.pick===id)));document.getElementById('focus-status').textContent=id?'当前：'+picks.find(b=>b.dataset.pick===id).textContent:'当前：全部解释';if(id){const c=document.getElementById(id);c.focus({preventScroll:true});c.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}}
+picks.forEach(b=>b.addEventListener('click',()=>show(b.dataset.pick)));document.getElementById('show-all').addEventListener('click',()=>show(null));
+document.querySelectorAll('[data-choice]').forEach(b=>b.addEventListener('click',()=>{const selected=b.getAttribute('aria-pressed')!=='true';document.querySelectorAll('[data-choice]').forEach(x=>x.setAttribute('aria-pressed',String(selected&&x===b)));document.querySelectorAll('[data-outcome]').forEach(x=>x.hidden=selected&&x.dataset.outcome!==b.dataset.choice);}));
+window.addEventListener('beforeprint',()=>{document.querySelectorAll('details').forEach(d=>{d.dataset.openBeforePrint=String(d.open);d.open=true;});});window.addEventListener('afterprint',()=>{document.querySelectorAll('details').forEach(d=>d.open=d.dataset.openBeforePrint==='true');});

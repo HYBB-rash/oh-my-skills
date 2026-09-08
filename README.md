@@ -13,8 +13,8 @@
 已经决定要做什么，但需要证明新增概念非加不可
   → first-principles-gate
 
-已经有结论或材料，但需要让读者立刻听懂、分清已知和未知
-  → plain-chinese
+已有报告，需要让读者理解结论、理由和适用条件
+  → readable-report
 ```
 
 两者可以连续使用：先用 `requirement-definition` 确认需求核心，再用 `first-principles-gate` 从用户结果推导最小概念预算并冻结通过条件。它们不替代设计、拆任务、实现或发布。
@@ -58,21 +58,13 @@
 
 不适用：简单、可逆、无需独立审计的小任务；也不能把它当成替执行者作决定的自动化锁。
 
-### `plain-chinese`：把结论讲清楚，不把未知讲成确定
+### `readable-report`：把已有报告变成容易读懂的阅读版
 
-它解决的核心问题是：解释、汇报或方案即使事实正确，也可能被术语、背景和罗列淹没；读者不知道结论是什么，也分不清已经确认的事实、合理推测和仍未确定的地方。
+保留原报告，另存阅读版，让读者理解结论、理由与适用条件；不追加调研，也不把不确定性改成定论。默认由 Luna / medium 单生产者组织完整解释，脚本装配独立 HTML 并执行固定检查，再完成三项内容自查与两张截图审读。
 
-它先用一句话给出核心意思，只保留支撑这一点的因果，删除不影响判断或下一步行动的内容；必要术语马上换成普通话，并明确标出“已经确认”“目前推测”与“还不能确定”。
+适用：已有报告的可读性改造、长报告重排或可视化阅读版；不用于从零调研、核验事实或几句话摘要。短文或纯文字改写可直接交付 Markdown。
 
-它和普通摘要、翻译或文案润色工具的不同是：
-
-- 普通摘要主要压缩内容；它先保证第一句话给出结论，并保留解释结论所需的因果。
-- 普通润色可能把话写得更顺，却掩盖证据强度；它把事实、推测和未知明确分开。
-- 普通“通俗化”可能丢掉行动所需的信息；它只删掉不影响当前判断或下一步的话。
-
-适用：用户要求说人话、简单讲、结论先行、不要术语，或需要明确标出推测与不确定性。
-
-不适用：需要保留逐字法律、技术或历史原文的场合。
+默认机器检查需要 Python、支持内置 WebSocket 的 Node 和 Chrome；缺工具会记为未完成，不自动安装。`passed_in_scope` 只表示指定自查与截图范围内通过，不代表全文视觉审查、外部事实核验或用户验收。
 
 ## 安装
 
@@ -88,7 +80,7 @@ git clone https://github.com/HYBB-rash/oh-my-skills.git
 mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
 cp -R oh-my-skills/skills/requirement-definition "${CODEX_HOME:-$HOME/.codex}/skills/"
 cp -R oh-my-skills/skills/first-principles-gate "${CODEX_HOME:-$HOME/.codex}/skills/"
-cp -R oh-my-skills/skills/plain-chinese "${CODEX_HOME:-$HOME/.codex}/skills/"
+cp -R oh-my-skills/skills/readable-report "${CODEX_HOME:-$HOME/.codex}/skills/"
 ```
 
 若使用其他 Skill 根目录，只需把相应的 `skills/<skill-name>` 目录复制过去。
@@ -100,7 +92,7 @@ cp -R oh-my-skills/skills/plain-chinese "${CODEX_HOME:-$HOME/.codex}/skills/"
 
 使用 $first-principles-gate，从用户结果推导最小概念预算，并阻止无依据的长期复杂度。
 
-使用 $plain-chinese，把这段汇报说人话，并标出还不能确定的地方。
+使用 $readable-report，把这份报告制作成容易读懂的阅读版，保留依据与限制。
 ```
 
 ## 仓库结构
@@ -118,9 +110,12 @@ cp -R oh-my-skills/skills/plain-chinese "${CODEX_HOME:-$HOME/.codex}/skills/"
     │   ├── agents/openai.yaml
     │   ├── scripts/validate_complexity_budget.py
     │   └── tests/test_complexity_budget.py
-    ├── plain-chinese/
+    ├── readable-report/
     │   ├── SKILL.md
-    │   └── agents/openai.yaml
+    │   ├── agents/openai.yaml
+    │   ├── assets/
+    │   ├── references/
+    │   └── scripts/
     └── requirement-definition/
         ├── SKILL.md
         └── agents/openai.yaml

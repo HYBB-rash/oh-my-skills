@@ -15,6 +15,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Added `readable-report` with its report assembly, review scripts, assets, and regression checks. Its entry command uses the actual installation directory.
+
 - Added deterministic validation for concept-count conservation, requirement coverage, evidence references, and baseline provenance, with rule-derived regression tests.
 
 ### Fixed
@@ -24,6 +26,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Limit `STOP` to the object shown unnecessary, and pause only audit-dependent steps when the auditor is unavailable without inventing a new verdict.
 
 ### Removed
+
+- Removed `plain-chinese` (说人话) from the collection and updated both installation guides.
 
 - Removed the unused `skill-contract.json` and text-rule test; retained and expanded the budget validator's regression suite to 31 tests.
 
